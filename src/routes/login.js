@@ -8,6 +8,10 @@ const bcryptjs = require("bcryptjs");
 // invocamos el modulo de conexion
 const connection = require("../Database/db");
 
+router.get("/", (req, res) => {
+   res.send("API START");
+});
+
 router.post("/login", async (req, res) => {
    const { user, pass } = req.body;
    let passwordHash = await bcryptjs.hash(pass, 8);
@@ -20,14 +24,14 @@ router.post("/login", async (req, res) => {
                results == 0 ||
                !(await bcryptjs.compare(pass, results[0].pass))
             ) {
-               res.send("usuario o Password incorrectas ");
+               res.status(400).send("usuario o Password incorrectas ");
             } else {
-               res.send(results[0]);
+               res.status(200).json(results[0]);
             }
          }
       );
    } else {
-      res.send("falta info");
+      res.status(400).send("falta info");
    }
 });
 module.exports = router;
